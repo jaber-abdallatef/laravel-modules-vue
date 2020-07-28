@@ -20,4 +20,6 @@ Route::prefix('blog')->group(function() {
     Route::get('/', 'BlogController@index');
     Route::post('/store', 'BlogController@store');
     Route::get('/get-all', 'BlogController@getAll');
+    Route::delete('/delete/{id}', 'BlogController@destroy');
+    Route::put('/update/{id}', 'BlogController@update');
 });

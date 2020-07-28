@@ -74,6 +74,10 @@ class BlogController extends Controller
     public function update(Request $request, $id)
     {
         //
+         $blog = Blog::find($id) ; 
+         $blog->update($request->all()) ;
+         return array('message' => "Blog Has Been Updated Successfully" , 'status' => 1)  ; 
+        
     }
 
     /**
@@ -84,5 +88,8 @@ class BlogController extends Controller
     public function destroy($id)
     {
         //
+        $blog = Blog::find($id) ;     
+        $blog->delete();
+        return array('message' => "Blog Has Been Deleted Successfully" , 'status' => 1)  ; 
     }
 }

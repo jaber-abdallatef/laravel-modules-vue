@@ -67,15 +67,17 @@ export default {
              serverBus.$emit('bindFormData', row);
     },
     removeData : function(id){
-      axios.get('/api/' + this.dataSrc + '/get-all?page=' + this.model.currentPage).then(response => {
-             this.model.data = response.data.data.data ; 
-              serverBus.$emit('loaded', false);
-              serverBus.$emit('buildPaginator', response.data.data);
+      
+   if(confirm("Do you really want to delete?")){
+      axios.delete('/api/' + this.dataSrc + '/delete/' + id).then(response => {
+        
+            this.getData() ;    
       }).catch(error => {
         if (error.response.status === 422) {
           this.errors = error.response.data.errors || {};
         }
       });
+    }
     }
   }
 };

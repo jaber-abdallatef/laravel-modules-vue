@@ -1950,15 +1950,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['viewId'],
   data: function data() {
     return {
       model: {
+        id: "",
         title: "",
         body: "",
         status: ""
@@ -1990,8 +1988,13 @@ __webpack_require__.r(__webpack_exports__);
       var _this2 = this;
 
       _app_js__WEBPACK_IMPORTED_MODULE_0__["serverBus"].$emit('loaded', true);
-      var action = this.mode === 'upadte' ? 'update' : 'store';
-      axios.post('/api/' + this.viewId + '/' + action, this.model).then(function (response) {
+      var action = this.mode === 'update' ? 'update/' + this.model.id : 'store';
+      var config = {
+        method: this.mode === 'update' ? 'put' : 'post',
+        url: '/api/' + this.viewId + '/' + action,
+        data: this.model
+      };
+      axios.request(config).then(function (response) {
         $('#dataForm').collapse('toggle');
         _app_js__WEBPACK_IMPORTED_MODULE_0__["serverBus"].$emit('refreshData', true);
 
@@ -2002,9 +2005,21 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
     },
-    clearForm: function clearForm() {},
+    clearForm: function clearForm() {
+      this.model = {
+        id: "",
+        title: "",
+        body: "",
+        status: ""
+      };
+    },
     getFormData: function getFormData(data) {
       this.model = data;
+      $('#dataForm').collapse('toggle');
+    },
+    toggleForm: function toggleForm() {
+      this.clearForm();
+      this.mode = 'create';
       $('#dataForm').collapse('toggle');
     }
   }
@@ -2146,15 +2161,15 @@ __webpack_require__.r(__webpack_exports__);
     removeData: function removeData(id) {
       var _this3 = this;
 
-      axios.get('/api/' + this.dataSrc + '/get-all?page=' + this.model.currentPage).then(function (response) {
-        _this3.model.data = response.data.data.data;
-        _app_js__WEBPACK_IMPORTED_MODULE_0__["serverBus"].$emit('loaded', false);
-        _app_js__WEBPACK_IMPORTED_MODULE_0__["serverBus"].$emit('buildPaginator', response.data.data);
-      })["catch"](function (error) {
-        if (error.response.status === 422) {
-          _this3.errors = error.response.data.errors || {};
-        }
-      });
+      if (confirm("Do you really want to delete?")) {
+        axios["delete"]('/api/' + this.dataSrc + '/delete/' + id).then(function (response) {
+          _this3.getData();
+        })["catch"](function (error) {
+          if (error.response.status === 422) {
+            _this3.errors = error.response.data.errors || {};
+          }
+        });
+      }
     }
   }
 });
@@ -38462,7 +38477,17 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _vm._m(0),
+    _c("p", [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-primary",
+          attrs: { type: "button" },
+          on: { click: _vm.toggleForm }
+        },
+        [_vm._v("Create New")]
+      )
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "collapse", attrs: { id: "dataForm" } }, [
       _c("div", { staticClass: "card card-body" }, [
@@ -38600,29 +38625,7 @@ var render = function() {
     ])
   ])
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("p", [
-      _c(
-        "button",
-        {
-          staticClass: "btn btn-primary",
-          attrs: {
-            type: "button",
-            "data-toggle": "collapse",
-            "data-target": "#dataForm",
-            "aria-expanded": "false",
-            "aria-controls": "dataForm"
-          }
-        },
-        [_vm._v("Create New")]
-      )
-    ])
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -51582,7 +51585,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports) {
 
-throw new Error("Module build failed (from ./node_modules/css-loader/index.js):\nModuleNotFoundError: Module not found: Error: Can't resolve '../img/cd-icon-arrow-1.svg' in 'C:\\wamp64\\www\\Hilal\\learn\\cms2\\resources\\sass'\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\webpack\\lib\\Compilation.js:925:10\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\webpack\\lib\\NormalModuleFactory.js:401:22\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\webpack\\lib\\NormalModuleFactory.js:130:21\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\webpack\\lib\\NormalModuleFactory.js:224:22\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\neo-async\\async.js:2830:7\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\neo-async\\async.js:6877:13\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\webpack\\lib\\NormalModuleFactory.js:214:25\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\Resolver.js:213:14\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\Resolver.js:285:5\n    at eval (eval at create (C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:13:1)\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\UnsafeCachePlugin.js:44:7\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\Resolver.js:285:5\n    at eval (eval at create (C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:13:1)\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\Resolver.js:285:5\n    at eval (eval at create (C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:25:1)\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\DescriptionFilePlugin.js:67:43\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\Resolver.js:285:5\n    at eval (eval at create (C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:14:1)\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\Resolver.js:285:5\n    at eval (eval at create (C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:25:1)\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\DescriptionFilePlugin.js:67:43\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\Resolver.js:285:5\n    at eval (eval at create (C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:14:1)\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\Resolver.js:285:5\n    at eval (eval at create (C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\tapable\\lib\\HookCodeFactory.js:33:10), <anonymous>:13:1)\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\DirectoryExistsPlugin.js:27:15\n    at C:\\wamp64\\www\\Hilal\\learn\\cms2\\node_modules\\enhanced-resolve\\lib\\CachedInputFileSystem.js:85:15\n    at processTicksAndRejections (internal/process/task_queues.js:79:11)");
+// removed by extract-text-webpack-plugin
 
 /***/ }),
 

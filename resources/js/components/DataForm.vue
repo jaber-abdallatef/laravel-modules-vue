@@ -4,10 +4,7 @@
       <button
         class="btn btn-primary"
         type="button"
-        data-toggle="collapse"
-        data-target="#dataForm"
-        aria-expanded="false"
-        aria-controls="dataForm"
+         v-on:click="toggleForm" 
       >Create New</button>
     </p>
     <div class="collapse" id="dataForm">
@@ -51,6 +48,7 @@ export default {
   data() {
     return {
       model: {
+        id: "" , 
         title:"", 
         body:"",
         status:""
@@ -77,8 +75,13 @@ export default {
     },
     store: function() {
            serverBus.$emit('loaded', true);
-           var action = (this.mode  === 'upadte')?'update':'store' ; 
-           axios.post('/api/' + this.viewId + '/' + action, this.model).then(response => {
+           var action = (this.mode  === 'update')?'update/' + this.model.id :'store' ; 
+           var  config = {
+              method  :(this.mode  === 'update')?'put':'post' , 
+              url : '/api/' + this.viewId + '/' + action , 
+              data : this.model 
+           }
+           axios.request(config).then(response => {
            $('#dataForm').collapse('toggle');
            serverBus.$emit('refreshData', true);
            this.clearForm() ; 
@@ -89,11 +92,21 @@ export default {
       });
     }, 
     clearForm : function(){
-        
-    } ,
+        this.model = {
+         id: "" , 
+        title:"", 
+        body:"",
+        status:""
+        }
+    },
     getFormData : function (data){
          this.model = data ; 
       $('#dataForm').collapse('toggle');
+    }, 
+    toggleForm : function(){
+            this.clearForm() ; 
+             this.mode  = 'create' ;  
+            $('#dataForm').collapse('toggle');
     }
   }, 
 };
